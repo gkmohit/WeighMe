@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "975458578369",
+    "firebase_url": "https://weigh-me.firebaseio.com",
+    "project_id": "weigh-me",
+    "storage_bucket": "weigh-me.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975458578369:android:c96a07698da337f4",
+        "android_client_info": {
+          "package_name": "com.mohitkishore.www.weighme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975458578369-0s1r83a1ikc8qb2co02jh7psd4mmqe46.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mohitkishore.www.weighme",
+            "certificate_hash": "05036799dc87b3f6ba4534880015e9ced461de34"
+          }
+        },
+        {
+          "client_id": "975458578369-il85alecjuo6ti74au48jh6l9c80871i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-jop3jwK9xv1Om5Td836WquAwgPsnZlo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975458578369-il85alecjuo6ti74au48jh6l9c80871i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
