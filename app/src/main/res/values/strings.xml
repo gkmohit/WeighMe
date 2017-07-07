@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Weigh Me</string>
+    <string name="intro_text">Start logging today</string>
+    <string name="phone_number_hint">Enter phone number</string>
+    <string name="invalid_phone_number">Invalid phone number.</string>
+    <string name="valid_phone_number">Thank you for your phone number.</string>
+    <string name="verification_text">Your verification code is on its way.</string>
+    <string name="verification_hint">123456</string>
+    <string name="error_string_too_many_requests">We are currently experienceing some issues. Thank you for your patience.</string>
 </resources>

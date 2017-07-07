@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_15">15dp</dimen>
+    <dimen name="dp_5">5dp</dimen>
+    <dimen name="circleButtonDimen">64dp</dimen>
+
+    <dimen name="text_size_heading">35sp</dimen>
+    <dimen name="text_size_paragraph">20sp</dimen>
+    <dimen name="dp_30">30dp</dimen>
+    <dimen name="dp_45">45dp</dimen>
+    <dimen name="dp_50">50dp</dimen>
+</resources>
