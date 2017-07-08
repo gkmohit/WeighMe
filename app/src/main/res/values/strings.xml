@@ -13,4 +13,6 @@
     <string name="unknown_error">An unknown error occurred</string>
     <string name="unknown_sign_in_response">Its not you, its us. Hang on tight.</string>
     <string name="login_in">Log In</string>
+    <string name="settings_string">Settings</string>
+    <string name="sign_out">Sign out</string>
 </resources>

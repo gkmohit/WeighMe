@@ -38,15 +38,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, HomePageActivity.class));
             finish();
         } else {
-            //User not signed in
-            /*startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setAvailableProviders(
-                                    Arrays.asList(
-                                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                            new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()))
-                            .build(), RC_SIGN_IN);*/
+            //TODO show app intro
+
         }
 
     }
