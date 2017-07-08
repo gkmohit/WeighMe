@@ -7,4 +7,10 @@
     <string name="verification_text">Your verification code is on its way.</string>
     <string name="verification_hint">123456</string>
     <string name="error_string_too_many_requests">We are currently experienceing some issues. Thank you for your patience.</string>
+    <string name="title_activity_home_page">HomePageActivity</string>
+    <string name="sign_in_cancelled">Sign in cancelled</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="unknown_error">An unknown error occurred</string>
+    <string name="unknown_sign_in_response">Its not you, its us. Hang on tight.</string>
+    <string name="login_in">Log In</string>
 </resources>

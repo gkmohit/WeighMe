@@ -1,157 +1,105 @@
 package com.mohitkishore.www.weighme;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.firebase.FirebaseException;
-import com.google.firebase.FirebaseTooManyRequestsException;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
-import com.lamudi.phonefield.PhoneEditText;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
+import com.firebase.ui.auth.ResultCodes;
+import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
 
-import at.markushi.ui.CircleButton;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
+    private static final int RC_SIGN_IN = 123;
 
-
-    private PhoneEditText mPhoneEditText;
-    private CircleButton mSubmitButton;
-
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-    private PhoneAuthProvider.ForceResendingToken mResendToken;
-
-    private String mVerificationId;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    @BindView(R.id.login_button)
+    Button mLoginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        initViews();
-        initListeners();
-        mPhoneEditText.setHint(R.string.phone_number_hint);
-        mPhoneEditText.setDefaultCountry("CA");
-
-        mCallbacks = getCallbacks();
+        if (mAuth.getCurrentUser() != null) {
+            startActivity(new Intent(MainActivity.this, HomePageActivity.class));
+            finish();
+        } else {
+            //User not signed in
+            /*startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(
+                                    Arrays.asList(
+                                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                            new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()))
+                            .build(), RC_SIGN_IN);*/
+        }
 
     }
 
-    @NonNull
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks getCallbacks() {
-        return new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+    @OnClick(R.id.login_button)
+    public void loginButton(View view){
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(
+                                Arrays.asList(
+                                        new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()))
+                        .build(), RC_SIGN_IN);
 
-            @Override
-            public void onVerificationCompleted(PhoneAuthCredential credential) {
-                // This callback will be invoked in two situations:
-                // 1 - Instant verification. In some cases the phone number can be instantly
-                //     verified without needing to send or enter a verification code.
-                // 2 - Auto-retrieval. On some devices Google Play services can automatically
-                //     detect the incoming verification SMS and perform verificaiton without
-                //     user action.
-                Log.d(TAG, "onVerificationCompleted:" + credential);
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
 
-//                signInWithPhoneAuthCredential(credential);
-            }
-
-            @Override
-            public void onVerificationFailed(FirebaseException e) {
-                // This callback is invoked in an invalid request for verification is made,
-                // for instance if the the phone number format is not valid.
-                Log.w(TAG, "onVerificationFailed", e);
-
-                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    // Invalid request
-                    // ...
-                    Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                } else if (e instanceof FirebaseTooManyRequestsException) {
-                    // The SMS quota for the project has been exceeded
-                    // ...
-                    Toast.makeText(MainActivity.this, getString(R.string.error_string_too_many_requests), Toast.LENGTH_LONG).show();
+            // Successfully signed in
+            if (resultCode == ResultCodes.OK) {
+                startActivity(new Intent(MainActivity.this, HomePageActivity.class));
+                finish();
+                return;
+            } else {
+                // Sign in failed
+                if (response == null) {
+                    // User pressed back button
+                    showToast(R.string.sign_in_cancelled);
+                    return;
                 }
 
-                // Show a message and update the UI
-                // ...
+                if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    showToast(R.string.no_internet_connection);
+                    return;
+                }
+
+                if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                    showToast(R.string.unknown_error);
+                    return;
+                }
             }
 
-            @Override
-            public void onCodeSent(String verificationId,
-                                   PhoneAuthProvider.ForceResendingToken token) {
-                // The SMS verification code has been sent to the provided phone number, we
-                // now need to ask the user to enter the code and then construct a credential
-                // by combining the code with a verification ID.
-                Log.d(TAG, "onCodeSent:" + verificationId);
-
-                // Save verification ID and resending token so we can use them later
-                mVerificationId = verificationId;
-                mResendToken = token;
-
-                // ...
-            }
-        };
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.submitButton) {
-            submitPhoneNumber();
+            showToast(R.string.unknown_sign_in_response);
         }
     }
 
-    private void initViews() {
-        mPhoneEditText = (PhoneEditText) findViewById(R.id.phone_number);
-        mSubmitButton = (CircleButton) findViewById(R.id.submitButton);
+    private void showToast(int errorMessageRes) {
+        Toast.makeText(MainActivity.this, getString(errorMessageRes), Toast.LENGTH_LONG).show();
+        //Snackbar.make(MainActivity.this, errorMessageRes, Snackbar.LENGTH_LONG).show();
     }
 
-    private void initListeners() {
-        mSubmitButton.setOnClickListener(this);
-    }
-
-    private void submitPhoneNumber() {
-        boolean valid = validateNumber();
-        if (valid) {
-            String phoneNumber = mPhoneEditText.getPhoneNumber();
-
-            firebaseNumberAuth(phoneNumber);
-        }
-    }
-
-
-    private void firebaseNumberAuth(String phoneNumber) {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNumber,        // Phone number to verify
-                60,                 // Timeout duration
-                TimeUnit.SECONDS,   // Unit of timeout
-                this,               // Activity (for callback binding)
-                mCallbacks);        // OnVerificationStateChangedCallbacks
-    }
-
-
-    private boolean validateNumber() {
-        boolean valid = true;
-
-        if (mPhoneEditText.isValid()) {
-            mPhoneEditText.setError(null);
-        } else {
-            mPhoneEditText.setError(getString(R.string.invalid_phone_number));
-            valid = false;
-        }
-
-        if (valid) {
-            Toast.makeText(MainActivity.this, R.string.valid_phone_number, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(MainActivity.this, R.string.invalid_phone_number, Toast.LENGTH_LONG).show();
-        }
-
-        return valid;
-    }
 }

@@ -22,10 +22,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:paddingTop="@dimen/dp_10"
         >
 
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_in"/>
     </LinearLayout>
 
 </LinearLayout>
