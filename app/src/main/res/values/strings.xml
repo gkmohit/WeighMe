@@ -15,4 +15,8 @@
     <string name="login_in">Log In</string>
     <string name="settings_string">Settings</string>
     <string name="sign_out">Sign out</string>
+    <string name="enter_weight_hint">Enter your weight</string>
+    <string name="log_weight">Log weight</string>
+    <string name="cancel">Cancel</string>
+    <string name="log">Log</string>
 </resources>
