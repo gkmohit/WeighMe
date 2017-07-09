@@ -1,5 +1,10 @@
 package com.mohitkishore.www.weighme.Model;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by AirUnknown on 2017-07-08.
  * TODO Add images too.
@@ -62,5 +67,17 @@ public class Weight {
 
     public void setWeight(String weight) {
         this.weight = weight;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("date", date);
+        result.put("month", month);
+        result.put("year", year);
+        result.put("time", time);
+        result.put("weight", weight);
+
+        return result;
     }
 }

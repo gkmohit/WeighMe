@@ -17,16 +17,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mohitkishore.www.weighme.Model.Weight;
 import com.mohitkishore.www.weighme.R;
 import com.mohitkishore.www.weighme.Utils.FirebaseConstants;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,13 +104,28 @@ public class HomePageActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 EditText weight = (EditText) dialogView.findViewById(R.id.logged_weight_text);
-                Toast.makeText(HomePageActivity.this, weight.getText().toString() , Toast.LENGTH_LONG).show();
+                String loggedWeight = weight.getEditableText().toString();
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference weightUserReference = database.getReference(
                         FirebaseConstants.USERS + "/" + mAuth.getCurrentUser().getUid());
 
+                Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+                String year = calendar.get(Calendar.YEAR) + "";
+                String month = calendar.get(Calendar.MONTH) + "";
+                String date = calendar.get(Calendar.DATE) + "";
+                String time = calendar.getTime().toString();
+                Weight w = new Weight(date, month, year, time, loggedWeight);
+                String key = weightUserReference.getKey();
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put(key, w.toMap());
+                weightUserReference.push().setValue(childUpdates, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError == null) {
 
-
+                        }
+                    }
+                });
             }
         });
         return alertDialogBuilder;
