@@ -19,4 +19,6 @@
     <string name="log_weight">Log weight</string>
     <string name="cancel">Cancel</string>
     <string name="log">Log</string>
+    <string name="save">Save</string>
+    <string name="saving">Saving</string>
 </resources>

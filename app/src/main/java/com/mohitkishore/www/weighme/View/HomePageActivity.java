@@ -1,6 +1,7 @@
 package com.mohitkishore.www.weighme.View;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,8 +31,6 @@ import com.mohitkishore.www.weighme.R;
 import com.mohitkishore.www.weighme.Utils.FirebaseConstants;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -56,6 +55,8 @@ public class HomePageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
+
+        readFromDB();
 
     }
 
@@ -87,6 +88,10 @@ public class HomePageActivity extends AppCompatActivity {
         return true;
     }
 
+    private void readFromDB() {
+
+    }
+
     @NonNull
     private AlertDialog.Builder createAlertDialog(final View dialogView) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomePageActivity.this);
@@ -100,9 +105,14 @@ public class HomePageActivity extends AppCompatActivity {
 
             }
         });
-        alertDialogBuilder.setPositiveButton(getString(R.string.log), new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                final ProgressDialog progressDialog = ProgressDialog.show(HomePageActivity.this,
+                        null,
+                        getString(R.string.saving));
+                progressDialog.show();
+
                 EditText weight = (EditText) dialogView.findViewById(R.id.logged_weight_text);
                 String loggedWeight = weight.getEditableText().toString();
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -115,15 +125,14 @@ public class HomePageActivity extends AppCompatActivity {
                 String date = calendar.get(Calendar.DATE) + "";
                 String time = calendar.getTime().toString();
                 Weight w = new Weight(date, month, year, time, loggedWeight);
-                String key = weightUserReference.getKey();
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put(key, w.toMap());
-                weightUserReference.push().setValue(childUpdates, new DatabaseReference.CompletionListener() {
+
+                weightUserReference.push().setValue(w.toMap(), new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         if (databaseError == null) {
 
                         }
+                        progressDialog.dismiss();
                     }
                 });
             }
