@@ -26,4 +26,14 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="TextViewLarge">
+        <item name="android:textSize">@dimen/text_size_heading</item>
+        <item name="android:padding">@dimen/dp_10</item>
+    </style>
+
+    <style name="TextViewMedium">
+        <item name="android:textSize">@dimen/text_size_paragraph</item>
+        <item name="android:padding">@dimen/dp_10</item>
+    </style>
 </resources>

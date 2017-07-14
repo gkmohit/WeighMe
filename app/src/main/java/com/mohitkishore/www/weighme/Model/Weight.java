@@ -12,6 +12,11 @@ import java.util.Map;
 
 public class Weight {
 
+    public static final String DATE = "date";
+    public static final String MONTH = "month";
+    public static final String YEAR = "year";
+    public static final String TIME = "time";
+    public static final String WEIGHT = "weight";
     String date;
     String month;
     String year;
@@ -27,6 +32,14 @@ public class Weight {
         this.year = year;
         this.time = time;
         this.weight = weight;
+    }
+
+    public Weight(HashMap<String, Object> weightMap){
+        this((String) weightMap.get(DATE),
+                (String)weightMap.get(MONTH),
+                (String)weightMap.get(YEAR),
+                (String)weightMap.get(TIME),
+                (String)weightMap.get(WEIGHT));
     }
 
     public String getDate() {
@@ -72,12 +85,18 @@ public class Weight {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("date", date);
-        result.put("month", month);
-        result.put("year", year);
-        result.put("time", time);
-        result.put("weight", weight);
+        result.put(DATE, date);
+        result.put(MONTH, month);
+        result.put(YEAR, year);
+        result.put(TIME, time);
+        result.put(WEIGHT, weight);
 
         return result;
+    }
+
+    @Override
+    public String toString(){
+        String returnVal = String.format("Date : %s, Month : %s, Year : %s, Time : %s, Weight : %s", date, month, year, time, weight);
+        return returnVal;
     }
 }
